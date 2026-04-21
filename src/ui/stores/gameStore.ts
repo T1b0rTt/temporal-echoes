@@ -86,6 +86,8 @@ export const useGameStore = defineStore('game', {
     spendTE(amount: Decimal | number): boolean {
       if (this.temporalEnergy.lt(amount)) return false;
       this.temporalEnergy = this.temporalEnergy.sub(amount);
+      const game = Game.getInstance();
+      this.temporalEnergy = game.temporalEnergy.amount;
       return true;
     },
 

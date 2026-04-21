@@ -51,6 +51,7 @@ function handleClick(): void {
   game.click();
   gameStore.temporalEnergy = game.temporalEnergy.amount;
   gameStore.totalTEClicked++;
+  refreshKey.value++;
 }
 
 function handleBuyGenerator(generatorId: string): void {
