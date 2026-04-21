@@ -2,11 +2,11 @@
 
 > Ein tiefgründiges Idle-/Incremental-Spiel mit 5 Prestige-Ebenen
 
-![Version](https://img.shields.io/badge/version-0.1.7--alpha-6366f1?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.1.8--release-6366f1?style=for-the-badge)
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Aktuelle Version: v0.1.7-a (Phase 1-7 - Alpha)
+## Aktuelle Version: v0.1.8-r (Phase 1-8 - RELEASE)
 
 ## Über das Spiel
 
@@ -90,11 +90,18 @@ temporal-echoes/
 | 5 | Automatisierung (Sequencer) | ✅ Abgeschlossen |
 | 6 | Reality Weave (RS Währung, Dritte Prestige-Ebene) | ✅ Abgeschlossen |
 | 7 | Nexus (NF Glyphen, Vierte Prestige-Ebene) | ✅ Abgeschlossen |
-| 8 | Celestial Ascension (HO, Finale Prestige) | 📋 Geplant |
+| 8 | Celestial Ascension (HO, Finale Prestige) | ✅ Abgeschlossen |
 
 ## Changelog
 
-### v0.1.7-a (Phase 7) - Aktuell
+### v0.1.8-r (Phase 8) - RELEASE 🎉
+
+- Himmlische Orbs (HO) Währung hinzugefügt
+- Celestial Ascension Prestige Layer (kostet 1e6 NF)
+- CelestialButton UI
+- **Alle 8 Phasen abgeschlossen!**
+
+### v0.1.7-a (Phase 7)
 
 - Nexus-Fragments (NF) Währung hinzugefügt
 - Nexus Prestige Layer (kostet 1e6 RS)

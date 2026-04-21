@@ -11,6 +11,7 @@ import ChronalerShiftButton from '../components/ChronalerShiftButton.vue';
 import EpochalTranscendenceButton from '../components/EpochalTranscendenceButton.vue';
 import RealityWeaveButton from '../components/RealityWeaveButton.vue';
 import NexusButton from '../components/NexusButton.vue';
+import CelestialButton from '../components/CelestialButton.vue';
 import SaveMenu from '../components/SaveMenu.vue';
 import SequencerEditor from '../components/SequencerEditor.vue';
 import TabNavigation from '../components/TabNavigation.vue';
@@ -172,6 +173,13 @@ onUnmounted(() => {
 
           <div class="prestige-buttons">
             <NexusButton />
+          </div>
+
+          <h3 class="subsection-title">Celestial Ascension</h3>
+          <p class="section-subtitle">Himmlische Orbs: {{ gameStore.formattedHO }}</p>
+
+          <div class="prestige-buttons">
+            <CelestialButton />
           </div>
         </section>
       </div>

@@ -1,6 +1,6 @@
 {
   "name": "temporal-echoes",
-  "version": "0.1.7-a",
+  "version": "0.1.8-r",
   "type": "module",
   "scripts": {
     "dev": "vite",

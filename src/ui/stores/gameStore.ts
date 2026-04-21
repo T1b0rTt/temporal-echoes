@@ -10,6 +10,7 @@ interface GameState {
   timeCrystals: Decimal;
   realityStrands: Decimal;
   nexusFragments: Decimal;
+  celestialOrbs: Decimal;
   totalTEProduced: Decimal;
   totalTEClicked: number;
   totalPlayTime: number;
@@ -25,6 +26,7 @@ export const useGameStore = defineStore('game', {
     timeCrystals: num.create(0),
     realityStrands: num.create(0),
     nexusFragments: num.create(0),
+    celestialOrbs: num.create(0),
     totalTEProduced: num.create(0),
     totalTEClicked: 0,
     totalPlayTime: 0,
@@ -52,6 +54,10 @@ export const useGameStore = defineStore('game', {
 
     formattedNF(): string {
       return num.format(this.nexusFragments, 0);
+    },
+
+    formattedHO(): string {
+      return num.format(this.celestialOrbs, 0);
     },
 
     formattedTotalProduced(): string {
@@ -99,6 +105,10 @@ export const useGameStore = defineStore('game', {
       this.nexusFragments = this.nexusFragments.add(amount);
     },
 
+    addCelestialOrbs(amount: Decimal | number): void {
+      this.celestialOrbs = this.celestialOrbs.add(amount);
+    },
+
     spendEchoShards(amount: Decimal | number): boolean {
       if (this.echoShards.lt(amount)) return false;
       this.echoShards = this.echoShards.sub(amount);
@@ -120,6 +130,7 @@ export const useGameStore = defineStore('game', {
       this.timeCrystals = game.timeCrystals.amount;
       this.realityStrands = game.realityStrands.amount;
       this.nexusFragments = game.nexusFragments.amount;
+      this.celestialOrbs = game.celestialOrbs.amount;
       this.currentTDT = game.currentTDT;
     },
 
@@ -174,6 +185,16 @@ export const useGameStore = defineStore('game', {
       const nfGained = game.performNexusAscend();
       if (nfGained.gt(0)) {
         this.addNexusFragments(nfGained);
+      }
+    },
+
+    async doCelestialAscend(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canCelestialAscend()) return;
+
+      const hoGained = game.performCelestialAscend();
+      if (hoGained.gt(0)) {
+        this.addCelestialOrbs(hoGained);
       }
     },
 

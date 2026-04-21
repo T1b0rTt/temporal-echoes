@@ -6,12 +6,14 @@ import { EchoShards } from '@/game/currencies/EchoShards';
 import { TimeCrystals } from '@/game/currencies/TimeCrystals';
 import { RealityStrands } from '@/game/currencies/RealityStrands';
 import { NexusFragments } from '@/game/currencies/NexusFragments';
+import { CelestialOrbs } from '@/game/currencies/CelestialOrbs';
 import { Generator } from '@/game/generators/Generator';
 import { echoCollectors, temporalDimensions } from '@/data/generators';
 import { ChronalerShift } from '@/game/prestige/ChronalerShift';
 import { EpochalTranscendence } from '@/game/prestige/EpochalTranscendence';
 import { RealityWeave } from '@/game/prestige/RealityWeave';
 import { Nexus } from '@/game/prestige/Nexus';
+import { CelestialAscension } from '@/game/prestige/CelestialAscension';
 
 export class Game {
   private static instance: Game;
@@ -22,6 +24,7 @@ export class Game {
   public timeCrystals: TimeCrystals;
   public realityStrands: RealityStrands;
   public nexusFragments: NexusFragments;
+  public celestialOrbs: CelestialOrbs;
   public generators: Map<string, Generator> = new Map();
   public dimensions: Map<string, Generator> = new Map();
   public tickCount: number = 0;
@@ -29,6 +32,7 @@ export class Game {
   public epochalTranscensions: number = 0;
   public realityWeaves: number = 0;
   public nexusAscensions: number = 0;
+  public celestialAscensions: number = 0;
 
   public currentTDT: number = 1;
   public bestTDT: number = 1;
@@ -39,6 +43,7 @@ export class Game {
     this.timeCrystals = new TimeCrystals();
     this.realityStrands = new RealityStrands();
     this.nexusFragments = new NexusFragments();
+    this.celestialOrbs = new CelestialOrbs();
     this.initGenerators();
     this.initDimensions();
     this.gameLoop = new GameLoop(this.processTick.bind(this));
@@ -378,6 +383,29 @@ export class Game {
   public getNexusAscendInfo(): { canAscend: boolean; fragments: string } {
     const info = Nexus.getInstance().getAscendInfo(this.realityStrands.amount);
     return { canAscend: info.canAscend, fragments: info.fragments };
+  }
+
+  public canCelestialAscend(): boolean {
+    return CelestialAscension.getInstance().canAscend(this.nexusFragments.amount);
+  }
+
+  public getCelestialAscendReward(): Decimal {
+    return CelestialAscension.getInstance().calculateCelestialOrbs(this.nexusFragments.amount);
+  }
+
+  public performCelestialAscend(): Decimal {
+    if (!this.canCelestialAscend()) return new Decimal(0);
+    const hoGained = this.getCelestialAscendReward();
+    this.celestialOrbs.add(hoGained);
+    this.celestialAscensions++;
+    CelestialAscension.getInstance().performAscend();
+    this.updateUnlocks();
+    return hoGained;
+  }
+
+  public getCelestialAscendInfo(): { canAscend: boolean; orbs: string } {
+    const info = CelestialAscension.getInstance().getAscendInfo(this.nexusFragments.amount);
+    return { canAscend: info.canAscend, orbs: info.orbs };
   }
 
   reset(): void {
