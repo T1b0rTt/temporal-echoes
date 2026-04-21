@@ -2,9 +2,11 @@ import { defineStore } from 'pinia';
 import { Decimal } from 'break_infinity.js';
 import { num } from '@/core/NumberManager';
 import { Game } from '@/core/Game';
+import { SaveManager } from '@/core/SaveManager';
 
 interface GameState {
   temporalEnergy: Decimal;
+  echoShards: Decimal;
   totalTEProduced: Decimal;
   totalTEClicked: number;
   totalPlayTime: number;
@@ -16,11 +18,12 @@ interface GameState {
 export const useGameStore = defineStore('game', {
   state: (): GameState => ({
     temporalEnergy: num.create(0),
+    echoShards: num.create(0),
     totalTEProduced: num.create(0),
     totalTEClicked: 0,
     totalPlayTime: 0,
-    currentTDT: 0,
-    bestTDT: 0,
+    currentTDT: 1,
+    bestTDT: 1,
     gameStarted: false,
   }),
 
@@ -29,12 +32,24 @@ export const useGameStore = defineStore('game', {
       return num.format(this.temporalEnergy, 1);
     },
 
+    formattedES(): string {
+      return num.format(this.echoShards, 0);
+    },
+
     formattedTotalProduced(): string {
       return num.format(this.totalTEProduced, 1);
     },
 
     isPrestigeAvailable(): boolean {
       return this.temporalEnergy.gte(1e12);
+    },
+
+    isDimensionShiftAvailable(): boolean {
+      return this.temporalEnergy.gte(1e6);
+    },
+
+    formattedTDT(): string {
+      return this.currentTDT.toFixed(2);
     },
   },
 
@@ -50,6 +65,16 @@ export const useGameStore = defineStore('game', {
       return true;
     },
 
+    addEchoShards(amount: Decimal | number): void {
+      this.echoShards = this.echoShards.add(amount);
+    },
+
+    spendEchoShards(amount: Decimal | number): boolean {
+      if (this.echoShards.lt(amount)) return false;
+      this.echoShards = this.echoShards.sub(amount);
+      return true;
+    },
+
     click(): void {
       this.addTE(1);
       this.totalTEClicked++;
@@ -58,11 +83,41 @@ export const useGameStore = defineStore('game', {
     tick(deltaTime: number): void {
       if (!this.gameStarted) return;
       this.totalPlayTime += deltaTime;
-      Game.getInstance().processTick(deltaTime);
+
+      const game = Game.getInstance();
+      game.processTick(deltaTime);
+      this.temporalEnergy = game.temporalEnergy.amount;
+      this.currentTDT = game.currentTDT;
+    },
+
+    async doDimensionShift(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canDoDimensionShift()) return;
+
+      const esGained = game.doDimensionShift();
+      if (esGained.gt(0)) {
+        this.addEchoShards(esGained);
+      }
+
+      this.temporalEnergy = game.temporalEnergy.amount;
+      this.currentTDT = game.currentTDT;
+      this.bestTDT = game.bestTDT;
+    },
+
+    async saveGame(): Promise<void> {
+      const saveManager = SaveManager.getInstance();
+      await saveManager.save();
+    },
+
+    async loadGame(): Promise<boolean> {
+      const saveManager = SaveManager.getInstance();
+      return await saveManager.load();
     },
 
     startGame(): void {
       this.gameStarted = true;
+      const saveManager = SaveManager.getInstance();
+      saveManager.startAutoSave();
     },
   },
 });

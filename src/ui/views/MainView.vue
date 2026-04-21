@@ -1,15 +1,39 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed } from 'vue';
+import { onMounted, onUnmounted, computed, ref } from 'vue';
 import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
 import ResourceBar from '../components/ResourceBar.vue';
 import GeneratorCard from '../components/GeneratorCard.vue';
+import DimensionCard from '../components/DimensionCard.vue';
+import UpgradeButton from '../components/UpgradeButton.vue';
+import PrestigeButton from '../components/PrestigeButton.vue';
+import SaveMenu from '../components/SaveMenu.vue';
+import TabNavigation from '../components/TabNavigation.vue';
+import { UpgradeManager } from '@/game/upgrades/UpgradeManager';
 
 const gameStore = useGameStore();
 const game = Game.getInstance();
+const upgradeManager = UpgradeManager.getInstance();
+
+const activeTab = ref('generators');
+
+const tabs = [
+  { id: 'generators', label: 'Generatoren' },
+  { id: 'upgrades', label: 'Upgrades' },
+  { id: 'dimensions', label: 'Dimensionen' },
+  { id: 'settings', label: 'Einstellungen' },
+];
 
 const generators = computed(() => {
-  return game.getAllGenerators().filter(g => g.isUnlocked);
+  return game.getUnlockedGenerators();
+});
+
+const dimensions = computed(() => {
+  return game.getUnlockedDimensions();
+});
+
+const upgrades = computed(() => {
+  return upgradeManager.getAllUpgrades().filter(u => !u.isMaxed);
 });
 
 function handleClick(): void {
@@ -17,8 +41,16 @@ function handleClick(): void {
   gameStore.totalTEClicked++;
 }
 
-function handleBuy(generatorId: string): void {
+function handleBuyGenerator(generatorId: string): void {
   game.buyGenerator(generatorId, gameStore.temporalEnergy);
+}
+
+function handleBuyDimension(dimensionId: string): void {
+  game.buyDimension(dimensionId);
+}
+
+function handleTabChange(tabId: string): void {
+  activeTab.value = tabId;
 }
 
 onMounted(() => {
@@ -40,6 +72,8 @@ onUnmounted(() => {
 
     <ResourceBar />
 
+    <TabNavigation :tabs="tabs" @tab-change="handleTabChange" />
+
     <main class="content">
       <div class="click-section">
         <button class="click-button" @click="handleClick">
@@ -48,17 +82,59 @@ onUnmounted(() => {
         </button>
       </div>
 
-      <section class="generators-section">
-        <h2 class="section-title">Echo-Sammler</h2>
-        <div class="generators-grid">
-          <GeneratorCard
-            v-for="generator in generators"
-            :key="generator.id"
-            :generator="generator"
-            @click="handleBuy(generator.id)"
-          />
-        </div>
+      <section class="prestige-section">
+        <PrestigeButton />
       </section>
+
+      <div v-if="activeTab === 'generators'" class="tab-content">
+        <section class="generators-section">
+          <h2 class="section-title">Echo-Sammler</h2>
+          <div class="generators-grid">
+            <GeneratorCard
+              v-for="generator in generators"
+              :key="generator.id"
+              :generator="generator"
+              @click="handleBuyGenerator(generator.id)"
+            />
+          </div>
+        </section>
+      </div>
+
+      <div v-if="activeTab === 'upgrades'" class="tab-content">
+        <section class="upgrades-section">
+          <h2 class="section-title">Upgrades</h2>
+          <p class="section-subtitle">Echo-Scherben: {{ gameStore.formattedES }}</p>
+          <div class="upgrades-grid">
+            <UpgradeButton
+              v-for="upgrade in upgrades"
+              :key="upgrade.id"
+              :upgrade="upgrade"
+            />
+          </div>
+        </section>
+      </div>
+
+      <div v-if="activeTab === 'dimensions'" class="tab-content">
+        <section class="dimensions-section">
+          <h2 class="section-title">Temporale Dimensionen</h2>
+          <p class="section-subtitle">TDT Multiplikator: {{ gameStore.formattedTDT }}x</p>
+          <div class="dimensions-grid">
+            <DimensionCard
+              v-for="dimension in dimensions"
+              :key="dimension.id"
+              :dimension="dimension"
+              @click="handleBuyDimension(dimension.id)"
+            />
+          </div>
+        </section>
+      </div>
+
+      <div v-if="activeTab === 'settings'" class="tab-content">
+        <section class="settings-section">
+          <h2 class="section-title">Einstellungen</h2>
+          <SaveMenu />
+        </section>
+      </div>
     </main>
 
     <footer class="footer">
@@ -98,13 +174,13 @@ onUnmounted(() => {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .click-section {
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .click-button {
@@ -112,7 +188,7 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 2rem 3rem;
+  padding: 1.5rem 2.5rem;
   background: linear-gradient(135deg, var(--color-accent) 0%, #8b5cf6 100%);
   border-radius: var(--radius-lg);
   color: white;
@@ -130,41 +206,71 @@ onUnmounted(() => {
 }
 
 .click-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 300;
 }
 
 .click-text {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
-.generators-section {
+.prestige-section {
+  padding: 0 0.5rem;
+}
+
+.tab-content {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.generators-section,
+.upgrades-section,
+.dimensions-section,
+.settings-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text);
   border-bottom: 2px solid var(--color-accent);
   padding-bottom: 0.5rem;
 }
 
-.generators-grid {
+.section-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.generators-grid,
+.upgrades-grid,
+.dimensions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.75rem;
 }
 
 .footer {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   background: var(--color-bg-secondary);
   border-top: 1px solid var(--color-border);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-text-secondary);
 }
+</style>
