@@ -12,16 +12,43 @@ const props = defineProps<{
 const gameStore = useGameStore();
 const game = Game.getInstance();
 
+const gameGenerator = computed(() => {
+  return game.generators.get(props.generator.id);
+});
+
 const canBuy = computed(() => {
-  return gameStore.temporalEnergy.gte(props.generator.cost);
+  const gen = gameGenerator.value;
+  if (!gen) return false;
+  return gameStore.temporalEnergy.gte(gen.cost);
 });
 
 const costDisplay = computed(() => {
-  return num.format(props.generator.cost, 0);
+  const gen = gameGenerator.value;
+  if (!gen) return '0';
+  return num.format(gen.cost, 0);
 });
 
 const productionDisplay = computed(() => {
-  return num.format(props.generator.production, 2);
+  const gen = gameGenerator.value;
+  if (!gen) return '0';
+  
+  if (gen.id === 'EC1') {
+    return num.format(gen.production, 2);
+  }
+  
+  const prevId = 'EC' + (parseInt(gen.id.replace('EC', '')) - 1);
+  const prevGen = game.generators.get(prevId);
+  if (!prevGen) return num.format(gen.production, 2);
+  
+  const rate = 0.05 + Math.random() * 0.07;
+  const production = prevGen.production.mul(rate).mul(gen.count);
+  return num.format(production, 2);
+});
+
+const countDisplay = computed(() => {
+  const gen = gameGenerator.value;
+  if (!gen) return '0';
+  return gen.count.toFixed(0);
 });
 
 function buy(): void {
@@ -34,10 +61,10 @@ function buy(): void {
 </script>
 
 <template>
-  <div class="generator-card" :class="{ disabled: !generator.isUnlocked }">
+  <div class="generator-card" :class="{ disabled: !gameGenerator?.isUnlocked }">
     <div class="generator-header">
       <span class="generator-id">{{ generator.id }}</span>
-      <span class="generator-count">{{ generator.formatCount() }}</span>
+      <span class="generator-count">{{ countDisplay }}</span>
     </div>
 
     <div class="generator-info">
