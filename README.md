@@ -2,11 +2,11 @@
 
 > Ein tiefgründiges Idle-/Incremental-Spiel mit 5 Prestige-Ebenen
 
-![Version](https://img.shields.io/badge/version-1.0.0-6366f1?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.1.4--alpha-6366f1?style=for-the-badge)
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Aktuelle Version: v1.0.0 (Phase 1-4)
+## Aktuelle Version: v0.1.4-a (Phase 1-4 - Alpha)
 
 ## Über das Spiel
 
