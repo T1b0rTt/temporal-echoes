@@ -6,6 +6,7 @@ import { SaveManager } from '@/core/SaveManager';
 
 interface GameState {
   temporalEnergy: Decimal;
+  tePerSecond: Decimal;
   echoShards: Decimal;
   timeCrystals: Decimal;
   realityStrands: Decimal;
@@ -22,6 +23,7 @@ interface GameState {
 export const useGameStore = defineStore('game', {
   state: (): GameState => ({
     temporalEnergy: num.create(0),
+    tePerSecond: num.create(0),
     echoShards: num.create(0),
     timeCrystals: num.create(0),
     realityStrands: num.create(0),
@@ -38,6 +40,10 @@ export const useGameStore = defineStore('game', {
   getters: {
     formattedTE(): string {
       return num.format(this.temporalEnergy, 1);
+    },
+
+    formattedTEPerSecond(): string {
+      return num.format(this.tePerSecond, 1);
     },
 
     formattedES(): string {
@@ -129,6 +135,7 @@ export const useGameStore = defineStore('game', {
       const game = Game.getInstance();
       game.processTick(deltaTime);
       this.temporalEnergy = game.temporalEnergy.amount;
+      this.tePerSecond = game.getTEPerSecond();
       this.timeCrystals = game.timeCrystals.amount;
       this.realityStrands = game.realityStrands.amount;
       this.nexusFragments = game.nexusFragments.amount;

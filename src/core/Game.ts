@@ -97,6 +97,28 @@ export class Game {
     return this.currentTDT;
   }
 
+  public getTEPerSecond(): Decimal {
+    let total = new Decimal(0);
+    const tdt = this.getTDTMultiplier();
+    
+    for (const generator of this.generators.values()) {
+      if (!generator.isUnlocked || generator.count.lte(0)) continue;
+      
+      let production = generator.baseProduction.mul(generator.count);
+      
+      if (generator.id === 'EC2') {
+        const ec1 = this.generators.get('EC1');
+        if (ec1) {
+          production = ec1.production.mul(0.1).mul(generator.count);
+        }
+      }
+      
+      total = total.add(production);
+    }
+    
+    return total.mul(tdt);
+  }
+
   public canDoDimensionShift(): boolean {
     return this.temporalEnergy.amount.gte(1e6);
   }

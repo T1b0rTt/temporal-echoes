@@ -10,7 +10,7 @@ const teDisplay = computed(() => {
 });
 
 const tePerSecond = computed(() => {
-  return num.format(gameStore.temporalEnergy, 1);
+  return num.format(gameStore.tePerSecond, 1);
 });
 </script>
 
