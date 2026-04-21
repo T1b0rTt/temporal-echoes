@@ -6,7 +6,7 @@
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Aktuelle Version: v0.1.4-a (Phase 1-4 - Alpha)
+## Aktuelle Version: v0.1.5-a (Phase 1-5 - Alpha)
 
 ## Über das Spiel
 
@@ -181,6 +181,32 @@ Die Kosten wachsen exponentiell (1.15 - 1.22 Wachstumsfaktor), während die Prod
 - Sequencer (Script Parser)
 - Fortgeschrittene Autobuyer
 - Conditional Buys
+
+### Phase 5 Features (Automatisierung)
+- **Sequencer.ts** - Script Parser mit Commands (buy, wait, waitFor, prestige, shift, loop, stop)
+- **SequencerEditor.vue** - UI Editor mit Play/Pause/Stop Controls
+- **Autobuyer.ts** - Automatischer Generator-Kauf
+- Tab "Sequencer" in der Navigation
+
+#### Changelog
+
+### v0.1.5-a (Phase 5) - Aktuell
+
+#### Phase 5 Features (Automatisierung)
+- Sequencer Script Parser implementiert
+- Commands: buy, wait, waitFor, dimension, chronal, epochal, stop
+- SequencerEditor UI Komponente
+- Autobuyer System für automatischen Generator-Kauf
+- Neuer Tab "Sequencer" in der Navigation
+
+### v0.1.4-a (Phase 1-4)
+
+#### Phase 4 Features (Epochale Transzendenz)
+- Zeitkristalle (ZK) Währung hinzugefügt
+- TD1-TD8 Temporale Dimensionen implementiert
+- EpochalTranscendence Prestige Layer hinzugefügt
+- EpochalTranscendenceButton UI Komponente
+- TD Unlock Logik (TD2-8 freigeschaltet bei previous TD count >= 5)
 
 ### Phase 6: Reality Weave
 - Realitätsstränge (RS) Währung
