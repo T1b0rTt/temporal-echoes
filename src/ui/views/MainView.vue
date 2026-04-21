@@ -7,6 +7,7 @@ import GeneratorCard from '../components/GeneratorCard.vue';
 import DimensionCard from '../components/DimensionCard.vue';
 import UpgradeButton from '../components/UpgradeButton.vue';
 import PrestigeButton from '../components/PrestigeButton.vue';
+import ChronalerShiftButton from '../components/ChronalerShiftButton.vue';
 import SaveMenu from '../components/SaveMenu.vue';
 import TabNavigation from '../components/TabNavigation.vue';
 import { UpgradeManager } from '@/game/upgrades/UpgradeManager';
@@ -21,6 +22,7 @@ const tabs = [
   { id: 'generators', label: 'Generatoren' },
   { id: 'upgrades', label: 'Upgrades' },
   { id: 'dimensions', label: 'Dimensionen' },
+  { id: 'prestige', label: 'Prestige' },
   { id: 'settings', label: 'Einstellungen' },
 ];
 
@@ -133,6 +135,18 @@ onUnmounted(() => {
         <section class="settings-section">
           <h2 class="section-title">Einstellungen</h2>
           <SaveMenu />
+        </section>
+      </div>
+
+      <div v-if="activeTab === 'prestige'" class="tab-content">
+        <section class="prestige-section">
+          <h2 class="section-title">Prestige</h2>
+          <p class="section-subtitle">Echo-Scherben: {{ gameStore.formattedES }}</p>
+
+          <div class="prestige-buttons">
+            <PrestigeButton />
+            <ChronalerShiftButton />
+          </div>
         </section>
       </div>
     </main>

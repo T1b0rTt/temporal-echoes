@@ -104,6 +104,16 @@ export const useGameStore = defineStore('game', {
       this.bestTDT = game.bestTDT;
     },
 
+    async doChronalerShift(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canChronalerShift()) return;
+
+      const esGained = game.performChronalerShift();
+      if (esGained.gt(0)) {
+        this.addEchoShards(esGained);
+      }
+    },
+
     async saveGame(): Promise<void> {
       const saveManager = SaveManager.getInstance();
       await saveManager.save();

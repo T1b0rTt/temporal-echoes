@@ -2,38 +2,28 @@ import { Decimal } from 'break_infinity.js';
 import { num } from '@/core/NumberManager';
 import { GameLoop } from './GameLoop';
 import { TemporalEnergy } from '@/game/currencies/TemporalEnergy';
+import { EchoShards } from '@/game/currencies/EchoShards';
 import { Generator } from '@/game/generators/Generator';
 import { echoCollectors, temporalDimensions } from '@/data/generators';
+import { ChronalerShift } from '@/game/prestige/ChronalerShift';
 
 export class Game {
   private static instance: Game;
 
   private gameLoop: GameLoop;
   public temporalEnergy: TemporalEnergy;
+  public echoShards: EchoShards;
   public generators: Map<string, Generator> = new Map();
   public dimensions: Map<string, Generator> = new Map();
   public tickCount: number = 0;
+  public chronalerShifts: number = 0;
 
   public currentTDT: number = 1;
   public bestTDT: number = 1;
 
-  private unlockThresholds: Record<string, number> = {
-    EC5: 10,
-    EC6: 10,
-    EC7: 10,
-    EC8: 10,
-    TD1: 1,
-    TD2: 1,
-    TD3: 1,
-    TD4: 1,
-    TD5: 1,
-    TD6: 1,
-    TD7: 1,
-    TD8: 1,
-  };
-
   private constructor() {
     this.temporalEnergy = new TemporalEnergy();
+    this.echoShards = new EchoShards();
     this.initGenerators();
     this.initDimensions();
     this.gameLoop = new GameLoop(this.processTick.bind(this));
@@ -241,6 +231,37 @@ export class Game {
 
   getDimensionShiftCost(): Decimal {
     return new Decimal(1e6);
+  }
+
+  public canChronalerShift(): boolean {
+    return ChronalerShift.getInstance().canShift(this.temporalEnergy.amount);
+  }
+
+  public getChronalerShiftReward(): Decimal {
+    return ChronalerShift.getInstance().calculateEchoShards(this.temporalEnergy.amount);
+  }
+
+  public performChronalerShift(): Decimal {
+    if (!this.canChronalerShift()) {
+      return new Decimal(0);
+    }
+
+    const esGained = this.getChronalerShiftReward();
+    this.echoShards.add(esGained);
+    this.chronalerShifts++;
+
+    ChronalerShift.getInstance().performShift();
+    this.updateUnlocks();
+
+    return esGained;
+  }
+
+  public getChronalerShiftInfo(): { canShift: boolean; echoShards: string } {
+    const info = ChronalerShift.getInstance().getShiftInfo(this.temporalEnergy.amount);
+    return {
+      canShift: info.canShift,
+      echoShards: info.echoShards,
+    };
   }
 
   reset(): void {
