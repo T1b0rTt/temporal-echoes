@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, computed, ref } from 'vue';
 import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
+import { GAME_TPS } from '@/core/GameLoop';
 import ResourceBar from '../components/ResourceBar.vue';
 import GeneratorCard from '../components/GeneratorCard.vue';
 import DimensionCard from '../components/DimensionCard.vue';
@@ -20,6 +21,7 @@ import { UpgradeManager } from '@/game/upgrades/UpgradeManager';
 const gameStore = useGameStore();
 const game = Game.getInstance();
 const upgradeManager = UpgradeManager.getInstance();
+let tickInterval: ReturnType<typeof setInterval> | null = null;
 
 const activeTab = ref('generators');
 
@@ -46,6 +48,7 @@ const upgrades = computed(() => {
 
 function handleClick(): void {
   game.click();
+  gameStore.temporalEnergy = game.temporalEnergy.amount;
   gameStore.totalTEClicked++;
 }
 
@@ -64,10 +67,17 @@ function handleTabChange(tabId: string): void {
 onMounted(() => {
   game.start();
   gameStore.startGame();
+  tickInterval = setInterval(() => {
+    gameStore.tick(1000 / GAME_TPS / 1000);
+  }, 1000 / GAME_TPS);
 });
 
 onUnmounted(() => {
   game.stop();
+  if (tickInterval) {
+    clearInterval(tickInterval);
+    tickInterval = null;
+  }
 });
 </script>
 

@@ -54,22 +54,27 @@ export class NumberManager {
     if (!value || typeof value !== 'object') return String(value);
     if (typeof value.lt !== 'function') return String(value);
     
-    if (value.lt(1000)) {
-      return value.toNumber().toFixed(decimals);
+    try {
+      if (value.lt(1000)) {
+        return value.toNumber().toFixed(decimals);
+      }
+
+      const log10Val = value.log10();
+      const log10 = typeof log10Val.toNumber === 'function' ? log10Val.toNumber() : log10Val;
+      const mantissa = value.div(Math.pow(10, Math.floor(log10))).toNumber();
+
+      const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+      const suffixIndex = Math.floor(log10 / 3);
+
+      if (suffixIndex < suffixes.length) {
+        return `${mantissa.toFixed(2)}${suffixes[suffixIndex]}`;
+      }
+
+      const scientific = log10.toExponential(2);
+      return scientific.replace('+', '');
+    } catch (e) {
+      return String(value);
     }
-
-    const log10 = value.log10().toNumber();
-    const mantissa = value.div(Math.pow(10, Math.floor(log10))).toNumber();
-
-    const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
-    const suffixIndex = Math.floor(log10 / 3);
-
-    if (suffixIndex < suffixes.length) {
-      return `${mantissa.toFixed(2)}${suffixes[suffixIndex]}`;
-    }
-
-    const scientific = log10.toExponential(2);
-    return scientific.replace('+', '');
   }
 }
 
