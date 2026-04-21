@@ -118,7 +118,6 @@ onUnmounted(() => {
               v-for="generator in generators"
               :key="generator.id + '-' + generatorKey"
               :generator="generator"
-              @click="handleBuyGenerator(generator.id)"
             />
           </div>
         </section>
