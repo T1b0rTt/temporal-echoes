@@ -1,4 +1,4 @@
-import { Decimal } from 'break_infinity.js';
+import Decimal from 'break_infinity.js';
 import { Game } from '@/core/Game';
 
 export interface ChronalerShiftResult {

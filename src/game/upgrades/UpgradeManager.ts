@@ -1,4 +1,4 @@
-import { Decimal } from 'break_infinity.js';
+import Decimal from 'break_infinity.js';
 import { Upgrade, UpgradeConfig } from './Upgrade';
 import { allUpgrades } from '@/data/upgrades';
 

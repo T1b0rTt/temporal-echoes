@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Decimal } from 'break_infinity.js';
+import Decimal from 'break_infinity.js';
 import { num } from '@/core/NumberManager';
 import { Game } from '@/core/Game';
 import { SaveManager } from '@/core/SaveManager';

@@ -101,7 +101,7 @@ temporal-echoes/
 | 2 | Erweiterung (EC5-8 Freischaltung, Upgrade System, TDT, Dimensions, Save) | ✅ Abgeschlossen |
 | 3 | Chronaler Shift (ES Währung, Erste Prestige-Ebene) | ✅ Abgeschlossen |
 | 4 | Epochale Transzendenz (ZK Währung, TD1-8, Zweite Prestige-Ebene) | ✅ Abgeschlossen |
-| 5 | Automatisierung (Sequencer) | 📋 Geplant |
+| 5 | Automatisierung (Sequencer) | ✅ Abgeschlossen |
 | 6 | Reality Weave (RS Währung, Fähigkeitsbaum) | 📋 Geplant |
 | 7 | Nexus (NF Glyphen) | 📋 Geplant |
 | 8 | Celestial Ascension (HO, Finale Prestige) | 📋 Geplant |

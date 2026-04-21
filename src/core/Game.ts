@@ -1,4 +1,4 @@
-import { Decimal } from 'break_infinity.js';
+import Decimal from 'break_infinity.js';
 import { num } from '@/core/NumberManager';
 import { GameLoop } from './GameLoop';
 import { TemporalEnergy } from '@/game/currencies/TemporalEnergy';
