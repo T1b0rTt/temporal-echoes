@@ -26,11 +26,10 @@ const productionDisplay = computed(() => {
 
 function buy(): void {
   if (!canBuy.value) return;
-  const generator = game.generators.get(props.generator.id);
-  if (!generator) return;
-  gameStore.spendTE(generator.cost);
-  generator.buy();
-  gameStore.temporalEnergy = game.temporalEnergy.amount;
+  const success = game.buyGenerator(props.generator.id, gameStore.temporalEnergy);
+  if (success) {
+    gameStore.temporalEnergy = game.temporalEnergy.amount;
+  }
 }
 </script>
 
