@@ -75,6 +75,7 @@ onMounted(() => {
   gameStore.startGame();
   tickInterval = setInterval(() => {
     gameStore.tick(1000 / GAME_TPS / 1000);
+    refreshKey.value++;
   }, 1000 / GAME_TPS);
 });
 

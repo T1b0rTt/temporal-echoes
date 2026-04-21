@@ -50,8 +50,26 @@ export class NumberManager {
     return a.gt(b) ? a : b;
   }
 
+  private formatFromNumber(value: number, decimals: number): string {
+    const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud', 'Dd', 'Td'];
+    const log10 = Math.log10(value);
+    const suffixIndex = Math.floor(log10 / 3);
+    
+    if (suffixIndex < suffixes.length) {
+      const mantissa = value / Math.pow(10, suffixIndex * 3);
+      return `${mantissa.toFixed(2)}${suffixes[suffixIndex]}`;
+    }
+    
+    return value.toExponential(2).replace('+', '');
+  }
+
   format(value: any, decimals: number = 0): string {
-    if (!value || typeof value !== 'object') return String(value);
+    if (!value) return '0';
+    if (typeof value === 'number') {
+      if (value < 1000) return value.toFixed(decimals);
+      return this.formatFromNumber(value, decimals);
+    }
+    if (typeof value !== 'object') return String(value);
     if (typeof value.lt !== 'function') return String(value);
     
     try {
