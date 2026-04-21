@@ -10,14 +10,11 @@ const canPrestige = computed(() => {
 });
 
 const costDisplay = computed(() => {
-  return num.format(1e6, 0);
+  return '1e6';
 });
 
 const rewardDisplay = computed(() => {
-  const te = gameStore.temporalEnergy;
-  if (te.lt(1e12)) return '0';
-  const logTE = te.log10().toNumber() - 10;
-  return num.format(5 * Math.pow(logTE, 1.5), 0);
+  return 'ES';
 });
 
 async function prestige(): Promise<void> {

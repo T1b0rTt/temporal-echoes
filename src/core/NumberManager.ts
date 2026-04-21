@@ -50,7 +50,10 @@ export class NumberManager {
     return a.gt(b) ? a : b;
   }
 
-  format(value: Decimal, decimals: number = 0): string {
+  format(value: any, decimals: number = 0): string {
+    if (!value || typeof value !== 'object') return String(value);
+    if (typeof value.lt !== 'function') return String(value);
+    
     if (value.lt(1000)) {
       return value.toNumber().toFixed(decimals);
     }

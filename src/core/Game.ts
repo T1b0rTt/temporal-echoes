@@ -407,12 +407,4 @@ export class Game {
     const info = CelestialAscension.getInstance().getAscendInfo(this.nexusFragments.amount);
     return { canAscend: info.canAscend, orbs: info.orbs };
   }
-
-  reset(): void {
-    for (const generator of this.generators.values()) {
-      generator.reset();
-    }
-    this.temporalEnergy.reset();
-    this.tickCount = 0;
-  }
 }
