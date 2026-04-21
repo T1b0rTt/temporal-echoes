@@ -10,6 +10,7 @@ import PrestigeButton from '../components/PrestigeButton.vue';
 import ChronalerShiftButton from '../components/ChronalerShiftButton.vue';
 import EpochalTranscendenceButton from '../components/EpochalTranscendenceButton.vue';
 import SaveMenu from '../components/SaveMenu.vue';
+import SequencerEditor from '../components/SequencerEditor.vue';
 import TabNavigation from '../components/TabNavigation.vue';
 import { UpgradeManager } from '@/game/upgrades/UpgradeManager';
 
@@ -24,6 +25,7 @@ const tabs = [
   { id: 'upgrades', label: 'Upgrades' },
   { id: 'dimensions', label: 'Dimensionen' },
   { id: 'prestige', label: 'Prestige' },
+  { id: 'sequencer', label: 'Sequencer' },
   { id: 'settings', label: 'Einstellungen' },
 ];
 
@@ -157,6 +159,13 @@ onUnmounted(() => {
           </div>
         </section>
       </div>
+
+      <div v-if="activeTab === 'sequencer'" class="tab-content">
+        <section class="sequencer-section">
+          <h2 class="section-title">Sequencer</h2>
+          <SequencerEditor />
+        </section>
+      </div>
     </main>
 
     <footer class="footer">
@@ -259,7 +268,8 @@ onUnmounted(() => {
 .generators-section,
 .upgrades-section,
 .dimensions-section,
-.settings-section {
+.settings-section,
+.sequencer-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
