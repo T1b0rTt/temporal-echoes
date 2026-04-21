@@ -10,6 +10,7 @@ import PrestigeButton from '../components/PrestigeButton.vue';
 import ChronalerShiftButton from '../components/ChronalerShiftButton.vue';
 import EpochalTranscendenceButton from '../components/EpochalTranscendenceButton.vue';
 import RealityWeaveButton from '../components/RealityWeaveButton.vue';
+import NexusButton from '../components/NexusButton.vue';
 import SaveMenu from '../components/SaveMenu.vue';
 import SequencerEditor from '../components/SequencerEditor.vue';
 import TabNavigation from '../components/TabNavigation.vue';
@@ -164,6 +165,13 @@ onUnmounted(() => {
 
           <div class="prestige-buttons">
             <RealityWeaveButton />
+          </div>
+
+          <h3 class="subsection-title">Nexus</h3>
+          <p class="section-subtitle">Nexus-Fragmente: {{ gameStore.formattedNF }}</p>
+
+          <div class="prestige-buttons">
+            <NexusButton />
           </div>
         </section>
       </div>

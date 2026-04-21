@@ -5,11 +5,13 @@ import { TemporalEnergy } from '@/game/currencies/TemporalEnergy';
 import { EchoShards } from '@/game/currencies/EchoShards';
 import { TimeCrystals } from '@/game/currencies/TimeCrystals';
 import { RealityStrands } from '@/game/currencies/RealityStrands';
+import { NexusFragments } from '@/game/currencies/NexusFragments';
 import { Generator } from '@/game/generators/Generator';
 import { echoCollectors, temporalDimensions } from '@/data/generators';
 import { ChronalerShift } from '@/game/prestige/ChronalerShift';
 import { EpochalTranscendence } from '@/game/prestige/EpochalTranscendence';
 import { RealityWeave } from '@/game/prestige/RealityWeave';
+import { Nexus } from '@/game/prestige/Nexus';
 
 export class Game {
   private static instance: Game;
@@ -19,12 +21,14 @@ export class Game {
   public echoShards: EchoShards;
   public timeCrystals: TimeCrystals;
   public realityStrands: RealityStrands;
+  public nexusFragments: NexusFragments;
   public generators: Map<string, Generator> = new Map();
   public dimensions: Map<string, Generator> = new Map();
   public tickCount: number = 0;
   public chronalerShifts: number = 0;
   public epochalTranscensions: number = 0;
   public realityWeaves: number = 0;
+  public nexusAscensions: number = 0;
 
   public currentTDT: number = 1;
   public bestTDT: number = 1;
@@ -34,6 +38,7 @@ export class Game {
     this.echoShards = new EchoShards();
     this.timeCrystals = new TimeCrystals();
     this.realityStrands = new RealityStrands();
+    this.nexusFragments = new NexusFragments();
     this.initGenerators();
     this.initDimensions();
     this.gameLoop = new GameLoop(this.processTick.bind(this));
@@ -342,6 +347,37 @@ export class Game {
   public getRealityWeaveInfo(): { canWeave: boolean; strands: string } {
     const info = RealityWeave.getInstance().getWeaveInfo(this.timeCrystals.amount);
     return { canWeave: info.canWeave, strands: info.strands };
+  }
+
+  reset(): void {
+    for (const generator of this.generators.values()) {
+      generator.reset();
+    }
+    this.temporalEnergy.reset();
+    this.tickCount = 0;
+  }
+
+  public canNexusAscend(): boolean {
+    return Nexus.getInstance().canAscend(this.realityStrands.amount);
+  }
+
+  public getNexusAscendReward(): Decimal {
+    return Nexus.getInstance().calculateNexusFragments(this.realityStrands.amount);
+  }
+
+  public performNexusAscend(): Decimal {
+    if (!this.canNexusAscend()) return new Decimal(0);
+    const nfGained = this.getNexusAscendReward();
+    this.nexusFragments.add(nfGained);
+    this.nexusAscensions++;
+    Nexus.getInstance().performAscend();
+    this.updateUnlocks();
+    return nfGained;
+  }
+
+  public getNexusAscendInfo(): { canAscend: boolean; fragments: string } {
+    const info = Nexus.getInstance().getAscendInfo(this.realityStrands.amount);
+    return { canAscend: info.canAscend, fragments: info.fragments };
   }
 
   reset(): void {

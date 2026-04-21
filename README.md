@@ -2,11 +2,11 @@
 
 > Ein tiefgründiges Idle-/Incremental-Spiel mit 5 Prestige-Ebenen
 
-![Version](https://img.shields.io/badge/version-0.1.6--alpha-6366f1?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.1.7--alpha-6366f1?style=for-the-badge)
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Aktuelle Version: v0.1.6-a (Phase 1-6 - Alpha)
+## Aktuelle Version: v0.1.7-a (Phase 1-7 - Alpha)
 
 ## Über das Spiel
 
@@ -89,12 +89,18 @@ temporal-echoes/
 | 4 | Epochale Transzendenz (ZK Währung, TD1-8, Zweite Prestige-Ebene) | ✅ Abgeschlossen |
 | 5 | Automatisierung (Sequencer) | ✅ Abgeschlossen |
 | 6 | Reality Weave (RS Währung, Dritte Prestige-Ebene) | ✅ Abgeschlossen |
-| 7 | Nexus (NF Glyphen) | 📋 Geplant |
+| 7 | Nexus (NF Glyphen, Vierte Prestige-Ebene) | ✅ Abgeschlossen |
 | 8 | Celestial Ascension (HO, Finale Prestige) | 📋 Geplant |
 
 ## Changelog
 
-### v0.1.6-a (Phase 6) - Aktuell
+### v0.1.7-a (Phase 7) - Aktuell
+
+- Nexus-Fragments (NF) Währung hinzugefügt
+- Nexus Prestige Layer (kostet 1e6 RS)
+- NexusButton UI
+
+### v0.1.6-a (Phase 6)
 
 - RealityStrands (RS) Währung hinzugefügt
 - RealityWeave Prestige Layer (kostet 1e9 ZK)

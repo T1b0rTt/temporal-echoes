@@ -9,6 +9,7 @@ interface GameState {
   echoShards: Decimal;
   timeCrystals: Decimal;
   realityStrands: Decimal;
+  nexusFragments: Decimal;
   totalTEProduced: Decimal;
   totalTEClicked: number;
   totalPlayTime: number;
@@ -23,6 +24,7 @@ export const useGameStore = defineStore('game', {
     echoShards: num.create(0),
     timeCrystals: num.create(0),
     realityStrands: num.create(0),
+    nexusFragments: num.create(0),
     totalTEProduced: num.create(0),
     totalTEClicked: 0,
     totalPlayTime: 0,
@@ -46,6 +48,10 @@ export const useGameStore = defineStore('game', {
 
     formattedRS(): string {
       return num.format(this.realityStrands, 0);
+    },
+
+    formattedNF(): string {
+      return num.format(this.nexusFragments, 0);
     },
 
     formattedTotalProduced(): string {
@@ -89,6 +95,10 @@ export const useGameStore = defineStore('game', {
       this.realityStrands = this.realityStrands.add(amount);
     },
 
+    addNexusFragments(amount: Decimal | number): void {
+      this.nexusFragments = this.nexusFragments.add(amount);
+    },
+
     spendEchoShards(amount: Decimal | number): boolean {
       if (this.echoShards.lt(amount)) return false;
       this.echoShards = this.echoShards.sub(amount);
@@ -109,6 +119,7 @@ export const useGameStore = defineStore('game', {
       this.temporalEnergy = game.temporalEnergy.amount;
       this.timeCrystals = game.timeCrystals.amount;
       this.realityStrands = game.realityStrands.amount;
+      this.nexusFragments = game.nexusFragments.amount;
       this.currentTDT = game.currentTDT;
     },
 
@@ -153,6 +164,16 @@ export const useGameStore = defineStore('game', {
       const rsGained = game.performRealityWeave();
       if (rsGained.gt(0)) {
         this.addRealityStrands(rsGained);
+      }
+    },
+
+    async doNexusAscend(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canNexusAscend()) return;
+
+      const nfGained = game.performNexusAscend();
+      if (nfGained.gt(0)) {
+        this.addNexusFragments(nfGained);
       }
     },
 
