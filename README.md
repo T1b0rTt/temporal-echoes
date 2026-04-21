@@ -6,7 +6,7 @@
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Aktuelle Version: v0.1.5-a (Phase 1-5 - Alpha)
+## Aktuelle Version: v0.1.6-a (Phase 1-6 - Alpha)
 
 ## Über das Spiel
 
@@ -102,7 +102,7 @@ temporal-echoes/
 | 3 | Chronaler Shift (ES Währung, Erste Prestige-Ebene) | ✅ Abgeschlossen |
 | 4 | Epochale Transzendenz (ZK Währung, TD1-8, Zweite Prestige-Ebene) | ✅ Abgeschlossen |
 | 5 | Automatisierung (Sequencer) | ✅ Abgeschlossen |
-| 6 | Reality Weave (RS Währung, Fähigkeitsbaum) | 📋 Geplant |
+| 6 | Reality Weave (RS Währung, Fähigkeitsbaum) | ✅ Abgeschlossen |
 | 7 | Nexus (NF Glyphen) | 📋 Geplant |
 | 8 | Celestial Ascension (HO, Finale Prestige) | 📋 Geplant |
 
@@ -190,7 +190,15 @@ Die Kosten wachsen exponentiell (1.15 - 1.22 Wachstumsfaktor), während die Prod
 
 #### Changelog
 
-### v0.1.5-a (Phase 5) - Aktuell
+### v0.1.6-a (Phase 6) - Aktuell
+
+#### Phase 6 Features (Reality Weave)
+- RealityStrands (RS) Währung hinzugefügt
+- RealityWeave Prestige Layer hinzugefügt
+- RealityWeaveButton UI Komponente
+- Neuer Prestige: Reality Weave (kostet 1e9 ZK)
+
+### v0.1.5-a (Phase 5)
 
 #### Phase 5 Features (Automatisierung)
 - Sequencer Script Parser implementiert

@@ -4,10 +4,12 @@ import { GameLoop } from './GameLoop';
 import { TemporalEnergy } from '@/game/currencies/TemporalEnergy';
 import { EchoShards } from '@/game/currencies/EchoShards';
 import { TimeCrystals } from '@/game/currencies/TimeCrystals';
+import { RealityStrands } from '@/game/currencies/RealityStrands';
 import { Generator } from '@/game/generators/Generator';
 import { echoCollectors, temporalDimensions } from '@/data/generators';
 import { ChronalerShift } from '@/game/prestige/ChronalerShift';
 import { EpochalTranscendence } from '@/game/prestige/EpochalTranscendence';
+import { RealityWeave } from '@/game/prestige/RealityWeave';
 
 export class Game {
   private static instance: Game;
@@ -16,11 +18,13 @@ export class Game {
   public temporalEnergy: TemporalEnergy;
   public echoShards: EchoShards;
   public timeCrystals: TimeCrystals;
+  public realityStrands: RealityStrands;
   public generators: Map<string, Generator> = new Map();
   public dimensions: Map<string, Generator> = new Map();
   public tickCount: number = 0;
   public chronalerShifts: number = 0;
   public epochalTranscensions: number = 0;
+  public realityWeaves: number = 0;
 
   public currentTDT: number = 1;
   public bestTDT: number = 1;
@@ -29,6 +33,7 @@ export class Game {
     this.temporalEnergy = new TemporalEnergy();
     this.echoShards = new EchoShards();
     this.timeCrystals = new TimeCrystals();
+    this.realityStrands = new RealityStrands();
     this.initGenerators();
     this.initDimensions();
     this.gameLoop = new GameLoop(this.processTick.bind(this));
@@ -309,6 +314,34 @@ export class Game {
 
   public getEpochalTranscendenceInfo(): { canTranscend: boolean; timeCrystals: string } {
     return EpochalTranscendence.getInstance().getTranscendenceInfo(this.timeCrystals.amount);
+  }
+
+  public canRealityWeave(): boolean {
+    return RealityWeave.getInstance().canWeave(this.timeCrystals.amount);
+  }
+
+  public getRealityWeaveReward(): Decimal {
+    return RealityWeave.getInstance().calculateRealityStrands(this.timeCrystals.amount);
+  }
+
+  public performRealityWeave(): Decimal {
+    if (!this.canRealityWeave()) {
+      return new Decimal(0);
+    }
+
+    const rsGained = this.getRealityWeaveReward();
+    this.realityStrands.add(rsGained);
+    this.realityWeaves++;
+
+    RealityWeave.getInstance().performWeave();
+    this.updateUnlocks();
+
+    return rsGained;
+  }
+
+  public getRealityWeaveInfo(): { canWeave: boolean; strands: string } {
+    const info = RealityWeave.getInstance().getWeaveInfo(this.timeCrystals.amount);
+    return { canWeave: info.canWeave, strands: info.strands };
   }
 
   reset(): void {

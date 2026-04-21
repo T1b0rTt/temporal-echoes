@@ -8,6 +8,7 @@ interface GameState {
   temporalEnergy: Decimal;
   echoShards: Decimal;
   timeCrystals: Decimal;
+  realityStrands: Decimal;
   totalTEProduced: Decimal;
   totalTEClicked: number;
   totalPlayTime: number;
@@ -21,6 +22,7 @@ export const useGameStore = defineStore('game', {
     temporalEnergy: num.create(0),
     echoShards: num.create(0),
     timeCrystals: num.create(0),
+    realityStrands: num.create(0),
     totalTEProduced: num.create(0),
     totalTEClicked: 0,
     totalPlayTime: 0,
@@ -40,6 +42,10 @@ export const useGameStore = defineStore('game', {
 
     formattedZK(): string {
       return num.format(this.timeCrystals, 0);
+    },
+
+    formattedRS(): string {
+      return num.format(this.realityStrands, 0);
     },
 
     formattedTotalProduced(): string {
@@ -79,6 +85,10 @@ export const useGameStore = defineStore('game', {
       this.timeCrystals = this.timeCrystals.add(amount);
     },
 
+    addRealityStrands(amount: Decimal | number): void {
+      this.realityStrands = this.realityStrands.add(amount);
+    },
+
     spendEchoShards(amount: Decimal | number): boolean {
       if (this.echoShards.lt(amount)) return false;
       this.echoShards = this.echoShards.sub(amount);
@@ -98,6 +108,7 @@ export const useGameStore = defineStore('game', {
       game.processTick(deltaTime);
       this.temporalEnergy = game.temporalEnergy.amount;
       this.timeCrystals = game.timeCrystals.amount;
+      this.realityStrands = game.realityStrands.amount;
       this.currentTDT = game.currentTDT;
     },
 
@@ -132,6 +143,16 @@ export const useGameStore = defineStore('game', {
       const zkGained = game.performEpochalTranscendence();
       if (zkGained.gt(0)) {
         this.addTimeCrystals(zkGained);
+      }
+    },
+
+    async doRealityWeave(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canRealityWeave()) return;
+
+      const rsGained = game.performRealityWeave();
+      if (rsGained.gt(0)) {
+        this.addRealityStrands(rsGained);
       }
     },
 
