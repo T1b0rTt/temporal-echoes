@@ -228,6 +228,7 @@ export class Game {
     const cost = generator.cost;
     if (currency.lt(cost)) return false;
 
+    this.temporalEnergy.subtract(cost);
     generator.buy();
     return true;
   }
