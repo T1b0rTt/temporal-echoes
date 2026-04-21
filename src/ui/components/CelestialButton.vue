@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
-import { num } from '@/core/NumberManager';
 
 const gameStore = useGameStore();
-const game = Game.getInstance();
 
-const canAscend = computed(() => game.canCelestialAscend());
-const rewardDisplay = computed(() => num.format(game.getCelestialAscendReward(), 0));
-const ascensionsCount = computed(() => game.celestialAscensions);
+const canAscend = computed(() => gameStore.nexusFragments >= 1e6);
+const rewardDisplay = computed(() => {
+  const nf = gameStore.nexusFragments;
+  if (nf < 1e6) return '0';
+  const logNF = Math.log10(nf) - 4;
+  return Math.floor(1 * Math.pow(logNF, 1.5));
+});
+const ascensionsCount = computed(() => 0);
 
 async function ascend(): Promise<void> {
   if (!canAscend.value) return;

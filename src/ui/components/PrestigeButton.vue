@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { num } from '@/core/NumberManager';
 import { useGameStore } from '../stores/gameStore';
 
 const gameStore = useGameStore();
 
 const canPrestige = computed(() => {
-  return gameStore.isDimensionShiftAvailable;
+  return gameStore.temporalEnergy >= 1e6;
 });
 
-const costDisplay = computed(() => {
-  return '1e6';
-});
+const costDisplay = computed(() => '1e6');
 
 const rewardDisplay = computed(() => {
-  return 'ES';
+  const te = gameStore.temporalEnergy;
+  if (te < 1e12) return '0';
+  const logTE = Math.log10(te) - 10;
+  return Math.floor(5 * Math.pow(logTE, 1.5));
 });
 
 async function prestige(): Promise<void> {

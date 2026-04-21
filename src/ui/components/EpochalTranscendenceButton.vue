@@ -1,23 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
-import { num } from '@/core/NumberManager';
 
 const gameStore = useGameStore();
-const game = Game.getInstance();
 
 const canTranscend = computed(() => {
-  return game.canEpochalTranscendence();
+  return gameStore.timeCrystals >= 1e6;
 });
 
 const rewardDisplay = computed(() => {
-  return num.format(game.getEpochalTranscendenceReward(), 0);
+  const zk = gameStore.timeCrystals;
+  if (zk < 1e6) return '0';
+  const logZK = Math.log10(zk) - 4;
+  return Math.floor(4 * Math.pow(logZK, 1.5));
 });
 
-const transcensionsCount = computed(() => {
-  return game.epochalTranscensions;
-});
+const transcensionsCount = computed(() => 0);
 
 async function transcend(): Promise<void> {
   if (!canTranscend.value) return;

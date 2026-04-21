@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
-import { num } from '@/core/NumberManager';
 
 const gameStore = useGameStore();
-const game = Game.getInstance();
 
-const canWeave = computed(() => game.canRealityWeave());
-const rewardDisplay = computed(() => num.format(game.getRealityWeaveReward(), 0));
-const weavesCount = computed(() => game.realityWeaves);
+const canWeave = computed(() => gameStore.realityStrands >= 1e9);
+const rewardDisplay = computed(() => {
+  const rs = gameStore.realityStrands;
+  if (rs < 1e9) return '0';
+  const logRS = Math.log10(rs) - 7;
+  return Math.floor(3 * Math.pow(logRS, 1.5));
+});
+const weavesCount = computed(() => 0);
 
 async function weave(): Promise<void> {
   if (!canWeave.value) return;

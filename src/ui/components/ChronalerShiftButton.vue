@@ -1,23 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Game } from '@/core/Game';
 import { useGameStore } from '../stores/gameStore';
-import { num } from '@/core/NumberManager';
 
 const gameStore = useGameStore();
-const game = Game.getInstance();
 
 const canPrestige = computed(() => {
-  return game.canChronalerShift();
+  return gameStore.temporalEnergy >= 1e12;
 });
 
 const rewardDisplay = computed(() => {
-  return num.format(game.getChronalerShiftReward(), 0);
+  const te = gameStore.temporalEnergy;
+  if (te < 1e12) return '0';
+  const logTE = Math.log10(te) - 10;
+  return Math.floor(5 * Math.pow(logTE, 1.5));
 });
 
-const shiftsCount = computed(() => {
-  return game.chronalerShifts;
-});
+const shiftsCount = computed(() => 0);
 
 async function prestige(): Promise<void> {
   if (!canPrestige.value) return;

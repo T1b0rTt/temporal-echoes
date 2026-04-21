@@ -59,8 +59,12 @@ export class Game {
   private initGenerators(): void {
     for (const config of echoCollectors) {
       const generator = new Generator(config);
+      if (['EC1', 'EC2', 'EC3', 'EC4'].includes(config.id)) {
+        generator.isUnlocked = true;
+      }
       this.generators.set(config.id, generator);
     }
+    this.temporalEnergy.add(10);
   }
 
   private initDimensions(): void {
