@@ -2,7 +2,7 @@
 
 > Ein tiefgründiges Idle-/Incremental-Spiel mit 5 Prestige-Ebenen
 
-![Version](https://img.shields.io/badge/version-0.1.4--alpha-6366f1?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.1.6--alpha-6366f1?style=for-the-badge)
 ![Vue](https://img.shields.io/badge/Vue-3.4-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)
 
@@ -15,7 +15,7 @@
 ### Kernfeatures
 
 - **6 Währungen:** TE → ES → ZK → RS → NF → HO
-- **5 Prestige-Ebenen:** Dimension Shift, Chronal Shift, Epochal Transcendence, Reality Weave, Nexus, Celestial Ascension
+- **6 Prestige-Ebenen:** Dimension Shift, Chronal Shift, Epochal Transcendence, Reality Weave, Nexus, Celestial Ascension
 - **16 Generatoren:** EC1-EC8 (Echo-Sammler) + TD1-TD8 (Temporale Dimensionen)
 - **100+ Upgrades**
 - **20+ Herausforderungen**
@@ -25,19 +25,19 @@
 ```
 Temporale Energie (TE)
        ↓
-  Dimension Shift (kostet 1e6 TE) → TDT Multiplikator
+  Dimension Shift (1e6 TE) → TDT Multiplikator
        ↓
-  Chronaler Shift (kostet 1e12 TE) → Echo-Scherben (ES)
+  Chronaler Shift (1e12 TE) → Echo-Scherben (ES)
        ↓
   Zeitkristalle (ZK) → TD1-8 Temporale Dimensionen
        ↓
-  Epochale Transzendenz (kostet 1e6 ZK) → Mehr ZK
+  Epochale Transzendenz (1e6 ZK) → Mehr ZK
        ↓
-  Realitätsstränge (RS) → Fähigkeitsbaum
+  Reality Weave (1e9 ZK) → Realitätsstränge (RS)
        ↓
-  Nexus-Fragmente (NF) → Glyphen-System
+  Nexus (NF) → Glyphen
        ↓
-  Himmlische Orbs (HO) → Meta-Progression
+  Celestial Ascension (HO) → Finale Prestige
 ```
 
 ## Tech Stack
@@ -51,17 +51,9 @@ Temporale Energie (TE)
 ## Installation
 
 ```bash
-# Dependencies installieren
 npm install
-
-# Development Server starten
-npm run dev
-
-# Production Build
-npm run build
-
-# TypeScript prüfen
-npm run typecheck
+npm run dev      # Development Server
+npm run build    # Production Build
 ```
 
 ## Projektstruktur
@@ -69,25 +61,19 @@ npm run typecheck
 ```
 temporal-echoes/
 ├── src/
-│   ├── core/           # Spiellogik Core
-│   │   ├── Game.ts     # Main Game Class
-│   │   ├── GameLoop.ts # 30 TPS Delta-time Loop
-│   │   ├── NumberManager.ts
-│   │   └── SaveManager.ts
-│   │
-│   ├── game/          # Game Content
-│   │   ├── currencies/   # Währungen (TE, ES, ZK)
+│   ├── core/           # Game Core (Game.ts, GameLoop.ts, NumberManager.ts, SaveManager.ts)
+│   ├── game/           # Game Content
+│   │   ├── currencies/   # Währungen (TE, ES, ZK, RS)
 │   │   ├── generators/    # Generatoren (EC1-8, TD1-8)
 │   │   ├── upgrades/     # Upgrade System
-│   │   └── prestige/     # Prestige Layer
-│   │
+│   │   ├── prestige/     # Prestige Layer (ChronalerShift, EpochalTranscendence, RealityWeave)
+│   │   └── automation/    # Sequencer, Autobuyer
 │   ├── ui/            # UI Components
 │   │   ├── components/   # Vue Komponenten
-│   │   ├── views/        # Seiten
+│   │   ├── views/        # MainView
 │   │   └── stores/       # Pinia Stores
-│   │
 │   └── data/          # Game Data
-│
+├── docs/             # Wiki Docs
 ├── index.html
 ├── package.json
 └── vite.config.ts
@@ -102,142 +88,80 @@ temporal-echoes/
 | 3 | Chronaler Shift (ES Währung, Erste Prestige-Ebene) | ✅ Abgeschlossen |
 | 4 | Epochale Transzendenz (ZK Währung, TD1-8, Zweite Prestige-Ebene) | ✅ Abgeschlossen |
 | 5 | Automatisierung (Sequencer) | ✅ Abgeschlossen |
-| 6 | Reality Weave (RS Währung, Fähigkeitsbaum) | ✅ Abgeschlossen |
+| 6 | Reality Weave (RS Währung, Dritte Prestige-Ebene) | ✅ Abgeschlossen |
 | 7 | Nexus (NF Glyphen) | 📋 Geplant |
 | 8 | Celestial Ascension (HO, Finale Prestige) | 📋 Geplant |
+
+## Changelog
+
+### v0.1.6-a (Phase 6) - Aktuell
+
+- RealityStrands (RS) Währung hinzugefügt
+- RealityWeave Prestige Layer (kostet 1e9 ZK)
+- RealityWeaveButton UI Komponente
+
+### v0.1.5-a (Phase 5)
+
+- Sequencer Script Parser (buy, wait, waitFor, dimension, chronal, epochal, stop)
+- SequencerEditor mit Play/Pause/Stop Controls
+- Autobuyer System
+
+### v0.1.4-a (Phase 4)
+
+- Zeitkristalle (ZK) Währung
+- TD1-TD8 Temporale Dimensionen
+- EpochalTranscendence Prestige Layer
+
+### v0.1.3-a (Phase 3)
+
+- Echo-Scherben (ES) Währung
+- ChronalerShift Prestige Layer
+
+### v0.1.2-a (Phase 2)
+
+- Progressive Unlocks für EC5-8
+- Upgrade System
+- TDT Mechanik
+- SaveManager mit IndexedDB
+
+### v0.1.1-a (Phase 1)
+
+- Vue 3 + Vite + TypeScript Setup
+- 30 TPS Game Loop
+- EC1-8 Generatoren
+- Basis UI
 
 ## Spielmechaniken
 
 ### Generatoren
 
-Jeder Echo-Sammler (EC1-EC8) sammelt die vorherige Ressource und produziert die aktuelle:
-- EC1 → TE
-- EC2 → EC1 ( produzir 10% von EC1 Produktion)
-- EC3 → EC2
-- usw...
-
-Die Kosten wachsen exponentiell (1.15 - 1.22 Wachstumsfaktor), während die Produktion linear steigt.
-
-### Progressive Freischaltung
-
-- **EC5-8:** Werden freigeschaltet, wenn der vorherige EC 10+ erreicht hat
-- **TD2-8:** Werden freigeschaltet, wenn der vorherige TD 5+ erreicht hat
+- EC1 → produziert TE
+- EC2 → sammelt EC1 (10% Produktion)
+- EC3-8 → Kette fortsetzen
+- TD1 → produziert ZK
+- TD2-8 → Kette fortsetzen
 
 ### Prestige-Ebenen
 
-1. **Dimension Shift** (verfügbar ab 1e6 TE)
-   - Setzt Generatoren zurück
-   - Erhöht TDT Multiplikator dauerhaft
-   - Belohnung: ES basierend auf TE
-
-2. **Chronaler Shift** (verfügbar ab 1e12 TE)
-   - Setzt alles zurück außer ES
-   - Belohnung: Echo-Scherben für permanente Upgrades
-
-3. **Epochale Transzendenz** (verfügbar ab 1e6 ZK)
-   - Setzt Generatoren und Dimensionen zurück
-   - Belohnung: Zeitkristalle
-
-## Changelog
-
-### v1.0.0 (Phase 1-4) - Aktuell
-
-#### Phase 4 Features (Epochale Transzendenz)
-- Zeitkristalle (ZK) Währung hinzugefügt
-- TD1-TD8 Temporale Dimensionen implementiert
-- EpochalTranscendence Prestige Layer hinzugefügt
-- EpochalTranscendenceButton UI Komponente
-- TD Unlock Logik (TD2-8 freigeschaltet bei previous TD count >= 5)
-
-#### Phase 3 Features (Chronaler Shift)
-- Echo-Scherben (ES) Währung hinzugefügt
-- ChronalerShift Prestige Layer implementiert
-- ChronalerShiftButton UI Komponente
-- ES Reset Mechanik
-
-#### Phase 2 Features (Erweiterung)
-- Progressive Unlocks für EC5-8
-- Upgrade System mit Upgrade.ts und UpgradeManager.ts
-- 10+ ES Upgrades definiert
-- TDT (Time Dilation Tick) Mechanik
-- SaveManager mit IndexedDB
-- Auto-Save alle 30 Sekunden
-- Tab Navigation UI
-- DimensionCard, UpgradeButton, SaveMenu, PrestigeButton
-
-#### Phase 1 Features (Fundament)
-- Vue 3 + Vite + TypeScript Setup
-- 30 TPS Game Loop
-- EC1-8 Generatoren
-- Basis UI mit ResourceBar, GeneratorCard, MainView
-- break_infinity.js Integration für große Zahlen
-- Pinia State Management
-
----
+1. **Dimension Shift** (ab 1e6 TE) - Setzt Generatoren zurück, erhöht TDT
+2. **Chronaler Shift** (ab 1e12 TE) - Setzt alles außer ES zurück, Belohnung: ES
+3. **Epochale Transzendenz** (ab 1e6 ZK) - Setzt Generatoren zurück, Belohnung: ZK
+4. **Reality Weave** (ab 1e9 ZK) - Setzt alles außer ES/RS zurück, Belohnung: RS
 
 ## Geplante Features
 
-### Phase 5: Automatisierung
-- Sequencer (Script Parser)
-- Fortgeschrittene Autobuyer
-- Conditional Buys
-
-### Phase 5 Features (Automatisierung)
-- **Sequencer.ts** - Script Parser mit Commands (buy, wait, waitFor, prestige, shift, loop, stop)
-- **SequencerEditor.vue** - UI Editor mit Play/Pause/Stop Controls
-- **Autobuyer.ts** - Automatischer Generator-Kauf
-- Tab "Sequencer" in der Navigation
-
-#### Changelog
-
-### v0.1.6-a (Phase 6) - Aktuell
-
-#### Phase 6 Features (Reality Weave)
-- RealityStrands (RS) Währung hinzugefügt
-- RealityWeave Prestige Layer hinzugefügt
-- RealityWeaveButton UI Komponente
-- Neuer Prestige: Reality Weave (kostet 1e9 ZK)
-
-### v0.1.5-a (Phase 5)
-
-#### Phase 5 Features (Automatisierung)
-- Sequencer Script Parser implementiert
-- Commands: buy, wait, waitFor, dimension, chronal, epochal, stop
-- SequencerEditor UI Komponente
-- Autobuyer System für automatischen Generator-Kauf
-- Neuer Tab "Sequencer" in der Navigation
-
-### v0.1.4-a (Phase 1-4)
-
-#### Phase 4 Features (Epochale Transzendenz)
-- Zeitkristalle (ZK) Währung hinzugefügt
-- TD1-TD8 Temporale Dimensionen implementiert
-- EpochalTranscendence Prestige Layer hinzugefügt
-- EpochalTranscendenceButton UI Komponente
-- TD Unlock Logik (TD2-8 freigeschaltet bei previous TD count >= 5)
-
-### Phase 6: Reality Weave
-- Realitätsstränge (RS) Währung
-- Paradoxien Herausforderungen
-- Fähigkeitsbaum
-
-### Phase 7: Nexus
-- Nexus-Fragmente (NF)
-- RNG Effects
-- Glyphen System
-
-### Phase 8: Celestial Ascension
-- Himmlische Orbs (HO)
-- Meta-Progression
-- Finale Prestige-Ebene
-
----
+- Phase 7: Nexus (NF Glyphen)
+- Phase 8: Celestial Ascension (HO Finale Prestige)
 
 ## Inspiration
 
 - [Antimatter Dimensions](https://github.com/IvarK/IvarK.github.io)
 - [Revolution Idle](https://revolutionidle.com/)
-- [Generic Idle Game Template](https://github.com/CookieMonster101/IvyFramework)
+
+## Links
+
+- [GitHub Repository](https://github.com/T1b0rTt/temporal-echoes)
+- [Wiki](https://github.com/T1b0rTt/temporal-echoes/wiki)
 
 ---
 
