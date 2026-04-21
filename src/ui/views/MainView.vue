@@ -24,6 +24,7 @@ const upgradeManager = UpgradeManager.getInstance();
 let tickInterval: ReturnType<typeof setInterval> | null = null;
 
 const activeTab = ref('generators');
+const generatorKey = ref(0);
 
 const tabs = [
   { id: 'generators', label: 'Generatoren' },
@@ -56,7 +57,7 @@ function handleClick(): void {
 function handleBuyGenerator(generatorId: string): void {
   game.buyGenerator(generatorId, gameStore.temporalEnergy);
   gameStore.temporalEnergy = game.temporalEnergy.amount;
-  refreshKey.value++;
+  generatorKey.value++;
 }
 
 function handleBuyDimension(dimensionId: string): void {
@@ -115,7 +116,7 @@ onUnmounted(() => {
           <div class="generators-grid">
             <GeneratorCard
               v-for="generator in generators"
-              :key="generator.id"
+              :key="generator.id + '-' + generatorKey"
               :generator="generator"
               @click="handleBuyGenerator(generator.id)"
             />
