@@ -174,3 +174,4 @@ function buy(): void {
 .action {
   font-weight: 500;
 }
+</style>

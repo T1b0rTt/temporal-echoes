@@ -7,6 +7,7 @@ import { SaveManager } from '@/core/SaveManager';
 interface GameState {
   temporalEnergy: Decimal;
   echoShards: Decimal;
+  timeCrystals: Decimal;
   totalTEProduced: Decimal;
   totalTEClicked: number;
   totalPlayTime: number;
@@ -19,6 +20,7 @@ export const useGameStore = defineStore('game', {
   state: (): GameState => ({
     temporalEnergy: num.create(0),
     echoShards: num.create(0),
+    timeCrystals: num.create(0),
     totalTEProduced: num.create(0),
     totalTEClicked: 0,
     totalPlayTime: 0,
@@ -34,6 +36,10 @@ export const useGameStore = defineStore('game', {
 
     formattedES(): string {
       return num.format(this.echoShards, 0);
+    },
+
+    formattedZK(): string {
+      return num.format(this.timeCrystals, 0);
     },
 
     formattedTotalProduced(): string {
@@ -69,6 +75,10 @@ export const useGameStore = defineStore('game', {
       this.echoShards = this.echoShards.add(amount);
     },
 
+    addTimeCrystals(amount: Decimal | number): void {
+      this.timeCrystals = this.timeCrystals.add(amount);
+    },
+
     spendEchoShards(amount: Decimal | number): boolean {
       if (this.echoShards.lt(amount)) return false;
       this.echoShards = this.echoShards.sub(amount);
@@ -87,6 +97,7 @@ export const useGameStore = defineStore('game', {
       const game = Game.getInstance();
       game.processTick(deltaTime);
       this.temporalEnergy = game.temporalEnergy.amount;
+      this.timeCrystals = game.timeCrystals.amount;
       this.currentTDT = game.currentTDT;
     },
 
@@ -111,6 +122,16 @@ export const useGameStore = defineStore('game', {
       const esGained = game.performChronalerShift();
       if (esGained.gt(0)) {
         this.addEchoShards(esGained);
+      }
+    },
+
+    async doEpochalTranscendence(): Promise<void> {
+      const game = Game.getInstance();
+      if (!game.canEpochalTranscendence()) return;
+
+      const zkGained = game.performEpochalTranscendence();
+      if (zkGained.gt(0)) {
+        this.addTimeCrystals(zkGained);
       }
     },
 

@@ -3,9 +3,11 @@ import { num } from '@/core/NumberManager';
 import { GameLoop } from './GameLoop';
 import { TemporalEnergy } from '@/game/currencies/TemporalEnergy';
 import { EchoShards } from '@/game/currencies/EchoShards';
+import { TimeCrystals } from '@/game/currencies/TimeCrystals';
 import { Generator } from '@/game/generators/Generator';
 import { echoCollectors, temporalDimensions } from '@/data/generators';
 import { ChronalerShift } from '@/game/prestige/ChronalerShift';
+import { EpochalTranscendence } from '@/game/prestige/EpochalTranscendence';
 
 export class Game {
   private static instance: Game;
@@ -13,10 +15,12 @@ export class Game {
   private gameLoop: GameLoop;
   public temporalEnergy: TemporalEnergy;
   public echoShards: EchoShards;
+  public timeCrystals: TimeCrystals;
   public generators: Map<string, Generator> = new Map();
   public dimensions: Map<string, Generator> = new Map();
   public tickCount: number = 0;
   public chronalerShifts: number = 0;
+  public epochalTranscensions: number = 0;
 
   public currentTDT: number = 1;
   public bestTDT: number = 1;
@@ -24,6 +28,7 @@ export class Game {
   private constructor() {
     this.temporalEnergy = new TemporalEnergy();
     this.echoShards = new EchoShards();
+    this.timeCrystals = new TimeCrystals();
     this.initGenerators();
     this.initDimensions();
     this.gameLoop = new GameLoop(this.processTick.bind(this));
@@ -125,22 +130,27 @@ export class Game {
   }
 
   public checkDimensionUnlocks(): void {
-    const totalTEConsumed = this.getTotalTEConsumed();
-    const dimThresholds = [
-      { id: 'TD2', te: 1e6 },
-      { id: 'TD3', te: 1e9 },
-      { id: 'TD4', te: 1e12 },
-      { id: 'TD5', te: 1e15 },
-      { id: 'TD6', te: 1e18 },
-      { id: 'TD7', te: 1e21 },
-      { id: 'TD8', te: 1e24 },
-    ];
+    const td1 = this.dimensions.get('TD1');
+    if (td1 && !td1.isUnlocked && this.chronalerShifts > 0) {
+      td1.isUnlocked = true;
+    }
 
-    for (const { id, te } of dimThresholds) {
+    const tdThresholds: Record<string, { prev: string; count: number }> = {
+      TD2: { prev: 'TD1', count: 5 },
+      TD3: { prev: 'TD2', count: 5 },
+      TD4: { prev: 'TD3', count: 5 },
+      TD5: { prev: 'TD4', count: 5 },
+      TD6: { prev: 'TD5', count: 5 },
+      TD7: { prev: 'TD6', count: 5 },
+      TD8: { prev: 'TD7', count: 5 },
+    };
+
+    for (const [id, req] of Object.entries(tdThresholds)) {
       const dimension = this.dimensions.get(id);
       if (!dimension || dimension.isUnlocked) continue;
 
-      if (totalTEConsumed.gte(te)) {
+      const prevDimension = this.dimensions.get(req.prev);
+      if (prevDimension && prevDimension.count.gte(req.count)) {
         dimension.isUnlocked = true;
       }
     }
@@ -173,6 +183,16 @@ export class Game {
       }
 
       this.temporalEnergy.add(production);
+    }
+
+    for (const dimension of this.dimensions.values()) {
+      if (!dimension.isUnlocked || dimension.count.lte(0)) continue;
+
+      const production = dimension.baseProduction.mul(dimension.count).mul(effectiveDelta);
+
+      if (dimension.id === 'TD1') {
+        this.timeCrystals.add(production);
+      }
     }
 
     this.updateUnlocks();
@@ -262,6 +282,33 @@ export class Game {
       canShift: info.canShift,
       echoShards: info.echoShards,
     };
+  }
+
+  public canEpochalTranscendence(): boolean {
+    return EpochalTranscendence.getInstance().canTranscend(this.timeCrystals.amount);
+  }
+
+  public getEpochalTranscendenceReward(): Decimal {
+    return EpochalTranscendence.getInstance().calculateTimeCrystals(this.timeCrystals.amount);
+  }
+
+  public performEpochalTranscendence(): Decimal {
+    if (!this.canEpochalTranscendence()) {
+      return new Decimal(0);
+    }
+
+    const zkGained = this.getEpochalTranscendenceReward();
+    this.timeCrystals.add(zkGained);
+    this.epochalTranscensions++;
+
+    EpochalTranscendence.getInstance().performTranscendence();
+    this.updateUnlocks();
+
+    return zkGained;
+  }
+
+  public getEpochalTranscendenceInfo(): { canTranscend: boolean; timeCrystals: string } {
+    return EpochalTranscendence.getInstance().getTranscendenceInfo(this.timeCrystals.amount);
   }
 
   reset(): void {

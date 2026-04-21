@@ -8,6 +8,7 @@ import DimensionCard from '../components/DimensionCard.vue';
 import UpgradeButton from '../components/UpgradeButton.vue';
 import PrestigeButton from '../components/PrestigeButton.vue';
 import ChronalerShiftButton from '../components/ChronalerShiftButton.vue';
+import EpochalTranscendenceButton from '../components/EpochalTranscendenceButton.vue';
 import SaveMenu from '../components/SaveMenu.vue';
 import TabNavigation from '../components/TabNavigation.vue';
 import { UpgradeManager } from '@/game/upgrades/UpgradeManager';
@@ -147,6 +148,13 @@ onUnmounted(() => {
             <PrestigeButton />
             <ChronalerShiftButton />
           </div>
+
+          <h3 class="subsection-title">Epochale Transzendenz</h3>
+          <p class="section-subtitle">Zeitkristalle: {{ gameStore.formattedZK }}</p>
+
+          <div class="prestige-buttons">
+            <EpochalTranscendenceButton />
+          </div>
         </section>
       </div>
     </main>
@@ -268,6 +276,14 @@ onUnmounted(() => {
 .section-subtitle {
   font-size: 0.8rem;
   color: var(--color-text-secondary);
+}
+
+.subsection-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .generators-grid,
